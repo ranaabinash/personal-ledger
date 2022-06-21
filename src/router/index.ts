@@ -1,6 +1,6 @@
-import { RouteRecordRaw, createRouter, createWebHistory } from 'vue-router';
-import Dashboard from '@/views/dashboard/Dashboard.vue';
-import Login from '@/views/login/login.vue';
+import { RouteRecordRaw, createRouter, createWebHistory } from 'vue-router'
+import Dashboard from '@/views/dashboard/Dashboard.vue'
+import Login from '@/views/login/Login.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -20,5 +20,4 @@ const router = createRouter({
   routes,
 })
 
-
-export default router;
+export default router

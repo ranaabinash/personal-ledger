@@ -1,7 +1,7 @@
 <template>
   <h1>{{ page }} Page</h1>
   <HelloWorld msg="Hello Vue 3 + TypeScript + Vite" />
-  <button @click="goTo('/login')">Login</button>
+  <button @click="goTo('/login')">Login</button> <br/>
   <router-link to="/login">Go to Login</router-link>
 </template>
 
@@ -19,7 +19,7 @@
       const page = ref('Dashboard')
 
       const goTo = (path: string) => {
-        router.push(path)
+        router.push({path})
       }
       return { page, goTo }
     },
