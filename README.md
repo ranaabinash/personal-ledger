@@ -14,3 +14,6 @@ Since TypeScript cannot handle type information for `.vue` imports, they are shi
 2. Reload the VS Code window by running `Developer: Reload Window` from the command palette.
 
 You can learn more about Take Over mode [here](https://github.com/johnsoncodehk/volar/discussions/471).
+
+## ESlint + Pinia + vue-router + Husky + lint-staged
+In this repo eslint is implemented along with the pinia, vue-router, husky and lint-staged along with route and state folder with index.ts file for the example set
