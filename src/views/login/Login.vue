@@ -14,7 +14,7 @@
 <script>
   import { ref, reactive } from '@vue/reactivity'
   import { computed, defineComponent } from '@vue/runtime-core'
-  import { useCartStore } from '@/store'
+  import { useRootStore } from '@/store'
 
   export default defineComponent({
     setup() {
@@ -23,7 +23,7 @@
         name: '',
         url: '',
       })
-      const cart = useCartStore()
+      const cart = useRootStore()
 
       const items = computed(() => cart.getItems)
 

@@ -1,22 +1,37 @@
-import { defineStore } from 'pinia'
+import { defineStore, _ActionsTree, _GettersTree } from 'pinia'
 
 export type Item = { name: string; url: string }
 
-export const useCartStore = defineStore({
-  id: 'cart',
-  state: () => ({
-    items: [] as Item[],
-  }),
+export interface IRootState {
+  items: Item[]
+}
+
+export const state: IRootState = {
+  items: [],
+}
+
+export interface IGetters extends _GettersTree<IRootState> {
+  getItems: (state: IRootState) => Item[]
+}
+export interface IActions extends _ActionsTree {
+  addItem(item: Item): void
+  removeItem(item: Item): void
+}
+
+export const useRootStore = defineStore('rootStore', {
+  state: () => state as IRootState,
   getters: {
-    getItems: (state) => state.items,
-  },
+    getItems: (state: IRootState) => state.items,
+  } as IGetters,
   actions: {
-    addItem(item: Item) {
-      this.items.push(item)
+    addItem(item) {
+      this.$patch((state: IRootState) => state.items.push(item))
     },
-    removeItem(item: Item) {
-      const i = this.items.findIndex((s) => s.name === item.name)
-      if (i > -1) this.items.splice(i, 1)
+    removeItem(item) {
+      this.$patch((state: IRootState) => {
+        const i = state.items.findIndex((s) => s.name === item.name)
+        if (i > -1) state.items.splice(i, 1)
+      })
     },
-  },
+  } as IActions,
 })
