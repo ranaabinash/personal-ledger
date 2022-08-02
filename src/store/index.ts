@@ -1,37 +1,87 @@
+import { UserServices } from '@/api'
+import { SetUser, User } from '@/api/models/Users'
 import { defineStore, _ActionsTree, _GettersTree } from 'pinia'
 
-export type Item = { name: string; url: string }
-
 export interface IRootState {
-  items: Item[]
+  users: User[]
+  user: User | null
 }
 
 export const state: IRootState = {
-  items: [],
+  users: [],
+  user: null,
 }
 
 export interface IGetters extends _GettersTree<IRootState> {
-  getItems: (state: IRootState) => Item[]
+  getUsers: (state: IRootState) => User[]
+  getUser: (state: IRootState) => User
 }
 export interface IActions extends _ActionsTree {
-  addItem(item: Item): void
-  removeItem(item: Item): void
+  fetchUsers(): void
+  addUser(user: SetUser): void
+  removeUser(user: SetUser): void
+  login(user: SetUser): void
+  logout(username: string): void
 }
 
 export const useRootStore = defineStore('rootStore', {
   state: () => state as IRootState,
   getters: {
-    getItems: (state: IRootState) => state.items,
+    getUsers: (state) => state.users,
+    getUser: (state) => state.user,
   } as IGetters,
   actions: {
-    addItem(item) {
-      this.$patch((state: IRootState) => state.items.push(item))
+    async fetchUsers() {
+      try {
+        const res = await UserServices.getUsers()
+        this.$patch((state: IRootState) => {
+          state.users.push(...res)
+        })
+      } catch (error) {
+        if (error instanceof Error) console.log(error.message)
+      }
     },
-    removeItem(item) {
+    async addUser(user) {
+      try {
+        const res = await UserServices.addUser(user)
+        if (res) {
+          this.$patch((state: IRootState) => {
+            state.users.push({ ...user, id: res.id })
+          })
+        }
+      } catch (error) {
+        if (error instanceof Error) console.log(error.message)
+      }
+    },
+    removeUser(user) {
       this.$patch((state: IRootState) => {
-        const i = state.items.findIndex((s) => s.name === item.name)
-        if (i > -1) state.items.splice(i, 1)
+        const i = state.users.findIndex((s) => s.username === user.username)
+        if (i > -1) state.users.splice(i, 1)
       })
+    },
+    login(userparam) {
+      this.$patch((state: IRootState) => {
+        const findIndex = state.users.findIndex(
+          (user) =>
+            user.username === userparam.username &&
+            user.password === userparam.password
+        )
+        if (findIndex === -1) {
+          throw new Error('User not found')
+        }
+        state.user = state.users[findIndex]
+        localStorage.setItem('loggedIn', JSON.stringify(state.users[findIndex]))
+      })
+    },
+    logout(username) {
+      this.$patch((state: IRootState) => {
+        const userIndex = state.users.findIndex(
+          (user) => user.username === username
+        )
+        if (userIndex === -1) throw new Error('unable to logout')
+        state.user = null
+      })
+      localStorage.removeItem('loggedIn')
     },
   } as IActions,
 })
