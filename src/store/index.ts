@@ -18,6 +18,7 @@ export interface IGetters extends _GettersTree<IRootState> {
 }
 export interface IActions extends _ActionsTree {
   fetchUsers(): void
+  fetchUser(id: string): void
   addUser(user: SetUser): void
   removeUser(user: SetUser): void
   login(user: SetUser): void
@@ -36,6 +37,17 @@ export const useRootStore = defineStore('rootStore', {
         const res = await UserServices.getUsers()
         this.$patch((state: IRootState) => {
           state.users.push(...res)
+        })
+      } catch (error) {
+        if (error instanceof Error) console.log(error.message)
+      }
+    },
+    async fetchUser(id: string) {
+      if (state.user) return
+      try {
+        const res = await UserServices.getUser(id)
+        this.$patch((state: IRootState) => {
+          state.user = res
         })
       } catch (error) {
         if (error instanceof Error) console.log(error.message)

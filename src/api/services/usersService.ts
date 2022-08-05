@@ -6,6 +6,11 @@ export class UserServices {
     return res.json()
   }
 
+  public static async getUser(id: string): Promise<User> {
+    const res = await fetch(`http://localhost:4000/users/${id}`);
+    return res.json();
+  }
+
   public static async addUser(user: SetUser): Promise<{ id: string }> {
     const payload = JSON.stringify(user)
     const res = await fetch(`http://localhost:4000/users`, {

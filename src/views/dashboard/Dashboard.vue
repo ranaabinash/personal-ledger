@@ -1,33 +1,55 @@
 <template>
-  <h1 class="text-3xl font-bold underline text-center">{{ page }} Page</h1>
   <div class="flex justify-center content-center my-2">
-    <div class="flex-row">
-      <button
-        class="bg-cyan-500 shadow-lg shadow-cyan-500/50 text-white m-2 py-2 px-8 rounded-lg"
-        @click="logout"
-      >
-        Logout
-      </button>
+    <div class="flex-row w-full">
       <br />
-      <router-link
-        class="flex justify-center m-2 text-[#3b82f6] underline hover:text-[#1e40af]"
-        to="/login"
-        >Go to Login</router-link
-      >
+      <h1 class="text-center text-3xl underline mb-4">
+        Welcome {{ self?.username ?? '' }}
+      </h1>
+      <form class="w-1/2 mx-auto space-y-3" @submit.prevent="pushStatement">
+        <ToggleButton
+          label="Income/Expenses"
+          :value="statement.income"
+          @onUpdateValue="statement.income = !statement.income"
+        />
+        <TextInput
+          label="Remarks"
+          placeholder="e.g. Salary"
+          v-model:moduleValue="statement.remark"
+        />
+        <TextInput
+          label="Amount"
+          placeholder="e.g. 100000"
+          v-model:moduleValue="statement.amount"
+        />
+        <div>
+          <button
+            type="submit"
+            class="p-2 mx-auto block my-2 w-1/3 rounded-md bg-green-200 hover:bg-green-300 active:bg-green-400"
+          >
+            Submit
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-  import { ref } from '@vue/reactivity'
-  import { computed, defineComponent } from '@vue/runtime-core'
+  import { reactive } from '@vue/reactivity'
+  import { computed, defineComponent, onMounted } from '@vue/runtime-core'
   import router from '@/router'
   import { useRootStore } from '@/store'
+  import TextInput from '@/components/inputs/text-input.vue'
+  import ToggleButton from '@/components/inputs/toggle-button.vue'
 
   export default defineComponent({
-    components: {},
+    components: { TextInput, ToggleButton },
     setup() {
-      const page = ref('Dashboard')
+      const statement = reactive({
+        amount: '',
+        remark: '',
+        income: false,
+      })
       const userState = useRootStore()
 
       const self = computed(() => userState.getUser)
@@ -36,17 +58,22 @@
         router.push({ path })
       }
 
-      const logout = () => {
-        try {
-          console.log(self.value)
-          userState.logout(self.value.username)
-          console.log('Logged out')
-          goTo('/login')
-        } catch (error) {
-          if (error instanceof Error) console.log(error.message)
-        }
+      onMounted(() => {
+        const user = JSON.parse(localStorage.getItem('loggedIn')!)
+        userState.fetchUser(user.id)
+      })
+
+      function clearInput() {
+        statement.amount = ''
+        statement.remark = ''
+        statement.income = false
       }
-      return { page, goTo, logout }
+
+      function pushStatement() {
+        console.log(statement.remark, statement.amount)
+        clearInput()
+      }
+      return { statement, goTo, self, pushStatement }
     },
   })
 </script>

@@ -5,17 +5,10 @@
     >
       <h1 class="text-3xl font-bold underline text-center mb-4">{{ page }}</h1>
       <form @submit.prevent="register">
-        <label
-          for="exampleFormControlInput1"
-          class="form-label inline-block mb-2 text-gray-700"
-          >User Name</label
-        >
-        <input
-          v-model="inputItem.username"
-          type="text"
-          class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-          id="username"
-          placeholder="Username"
+        <TextInput
+          label="Username"
+          placeholder="e.g. Jhon Cena"
+          v-model:moduleValue="inputItem.username"
         />
         <Password
           label="Password"
@@ -53,6 +46,7 @@
   import { useRootStore } from '@/store'
   import router from '@/router'
   import Password from '@/components/inputs/password.vue'
+  import TextInput from '@/components/inputs/text-input.vue'
 
   export default defineComponent({
     setup() {
@@ -83,7 +77,7 @@
 
       return { page, register, inputItem }
     },
-    components: { Password },
+    components: { Password, TextInput },
   })
 </script>
 

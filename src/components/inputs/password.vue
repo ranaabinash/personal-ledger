@@ -1,7 +1,7 @@
 <template>
   <label
     for="exampleFormControlInput1"
-    class="form-label inline-block mb-2 text-gray-700"
+    class="form-label inline-block mb-2 text-gray-700 text-lg"
     >{{ label }}</label
   >
   <div class="relative">

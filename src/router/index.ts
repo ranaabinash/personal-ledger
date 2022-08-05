@@ -1,6 +1,8 @@
 import { RouteRecordRaw, createRouter, createWebHistory } from 'vue-router'
 import Dashboard from '@/views/dashboard/Dashboard.vue'
+import Layout from '@/components/Layouts/Layout.vue'
 import Login from '@/views/login/Login.vue'
+import NotFound from '@/views/NotFound.vue'
 import Register from '@/views/login/Register.vue'
 import { useRootStore } from '@/store'
 
@@ -8,7 +10,30 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'Home',
-    component: Dashboard,
+    component: Layout,
+    children: [
+      {
+        path: '',
+        component: Dashboard,
+        meta: {
+          requiresAuth: true,
+        },
+      },
+      {
+        path: 'about',
+        component: Dashboard,
+        meta: {
+          requiresAuth: true,
+        },
+      },
+      {
+        path: 'contact',
+        component: Dashboard,
+        meta: {
+          requiresAuth: true,
+        },
+      },
+    ],
     meta: {
       requiresAuth: true,
     },
@@ -28,6 +53,12 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       requiresAuth: false,
     },
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: NotFound,
+    meta: { requiresAuth: false },
   },
 ]
 
