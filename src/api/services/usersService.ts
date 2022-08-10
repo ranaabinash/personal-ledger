@@ -11,17 +11,18 @@ export class UserServices {
     return res.json();
   }
 
-  public static async addUser(user: SetUser): Promise<{ id: string }> {
+  public static async addUser(user: SetUser) { // : Promise<{ id: string }>
     const payload = JSON.stringify(user)
-    const res = await fetch(`http://localhost:4000/users`, {
-      method: 'POSt',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: payload,
-    })
+    console.log(payload);
+    // const res = await fetch(`http://localhost:3001/signup`, {
+    //   method: 'POSt',
+    //   headers: {
+    //     Accept: 'application/json',
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: payload,
+    // })
 
-    return res.json()
+    // return res.json()
   }
 }

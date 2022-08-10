@@ -8,17 +8,27 @@
         <TextInput
           label="Username"
           placeholder="e.g. Jhon Cena"
-          v-model:moduleValue="inputItem.username"
+          v-model:moduleValue="inputItem.value.username"
+          :error="inputItem.errors.username"
+        />
+        <TextInput
+          label="Email"
+          placeholder="e.g. jhon@cena.com"
+          typeInput="email"
+          v-model:moduleValue="inputItem.value.email"
+          :error="inputItem.errors.email"
         />
         <Password
           label="Password"
           placeholder="password"
-          v-model:password="inputItem.password"
+          v-model:password="inputItem.value.password"
+          :error="inputItem.errors.password"
         />
         <Password
           label="Confirm Password"
           placeholder="Confirm Password"
-          v-model:password="inputItem.confirmpassword"
+          v-model:password="inputItem.value.confirmpassword"
+          :error="inputItem.errors.confirmpassword"
           inputId="confirm-password"
         />
         <br />
@@ -47,27 +57,77 @@
   import router from '@/router'
   import Password from '@/components/inputs/password.vue'
   import TextInput from '@/components/inputs/text-input.vue'
+  import { doesMatch, passwordPattern } from '@/utils/validation'
 
   export default defineComponent({
     setup() {
       const page = ref('Register')
       const inputItem = reactive({
-        username: '',
-        password: '',
-        confirmpassword: '',
+        value: {
+          username: '',
+          email: '',
+          password: '',
+          confirmpassword: '',
+        },
+        errors: {
+          username: '',
+          email: '',
+          password: '',
+          confirmpassword: '',
+        },
       })
       const user = useRootStore()
+
       const clearInput = () => {
-        inputItem.username = ''
-        inputItem.password = ''
-        inputItem.confirmpassword = ''
+        inputItem.value.username = ''
+        inputItem.value.email = ''
+        inputItem.value.password = ''
+        inputItem.value.confirmpassword = ''
+      }
+
+      const clearError = () => {
+        console.log(`Clear error logged`)
+        inputItem.errors.username = ''
+        inputItem.errors.email = ''
+        inputItem.errors.password = ''
+        inputItem.errors.confirmpassword = ''
+      }
+
+      function validate() {
+        clearError()
+        let valid = true
+
+        inputItem.errors.password = passwordPattern(inputItem.value.password)
+
+        inputItem.errors.confirmpassword = passwordPattern(
+          inputItem.value.confirmpassword
+        )
+
+        if (
+          !inputItem.errors.password.length &&
+          !inputItem.errors.confirmpassword.length
+        ) {
+          inputItem.errors.confirmpassword = doesMatch(
+            inputItem.value.password,
+            inputItem.value.confirmpassword,
+            'password does not match with confirm passowrd'
+          )
+        }
+
+        Object.values(inputItem.errors).forEach((error) => {
+          if (error.length) {
+            valid = false
+          }
+        })
+        return valid
       }
 
       function register() {
-        if (inputItem.password === inputItem.confirmpassword) {
+        if (validate()) {
           user.addUser({
-            username: inputItem.username,
-            password: inputItem.password,
+            username: inputItem.value.username,
+            email: inputItem.value.email,
+            password: inputItem.value.password,
           })
           console.log('Registered')
           clearInput()

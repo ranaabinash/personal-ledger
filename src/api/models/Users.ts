@@ -1,10 +1,12 @@
 export interface User {
-  id: string
+  _id: string
   username: string
+  email?: string,
   password: string
 }
 
 export interface SetUser {
   username: string
+  email?: string
   password: string
 }

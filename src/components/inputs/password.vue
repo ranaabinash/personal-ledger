@@ -6,6 +6,7 @@
   >
   <div class="relative">
     <input
+      required
       :id="inputId"
       :value="password"
       @input="updatePassword"
@@ -58,6 +59,11 @@
       </button>
     </div>
   </div>
+  <div>
+    <p class="text-red-500">
+      {{ error }}
+    </p>
+  </div>
 </template>
 
 <script lang="ts">
@@ -81,6 +87,10 @@
         type: String,
         required: false,
         default: 'password',
+      },
+      error: {
+        type: String,
+        default: '',
       },
     },
     emits: ['update:password'],
