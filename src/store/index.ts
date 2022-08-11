@@ -57,9 +57,10 @@ export const useRootStore = defineStore('rootStore', {
       try {
         const res = await UserServices.addUser(user)
         if (res) {
-          this.$patch((state: IRootState) => {
-            state.users.push({ ...user, id: res.id })
-          })
+          console.log(res);
+          // this.$patch((state: IRootState) => {
+          //   state.users.push({ ...user, _id: res.id })
+          // })
         }
       } catch (error) {
         if (error instanceof Error) console.log(error.message)

@@ -1,14 +1,8 @@
 <script lang="ts">
-  import { defineComponent, onMounted } from '@vue/runtime-core'
-  import { useRootStore } from '@/store'
+  import { defineComponent } from '@vue/runtime-core'
 
   export default defineComponent({
-    setup() {
-      const userState = useRootStore();
-      onMounted(() => {
-        userState.fetchUsers();
-      })
-    },
+    setup() {},
   })
 </script>
 

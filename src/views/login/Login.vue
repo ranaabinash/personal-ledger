@@ -8,12 +8,14 @@
         <TextInput
           label="Username"
           placeholder="e.g. Jhon Cena"
-          v-model:moduleValue="inputItem.username"
+          v-model:moduleValue="inputItem.value.username"
+          :error="inputItem.error.username"
         />
         <Password
           label="Password"
-          v-model:password="inputItem.password"
+          v-model:password="inputItem.value.password"
           placeholder="password"
+          :error="inputItem.error.password"
         />
         <br />
         <button
@@ -41,22 +43,36 @@
   import router from '@/router'
   import Password from '@/components/inputs/password.vue'
   import TextInput from '@/components/inputs/text-input.vue'
+  import { passwordPattern } from '@/utils/validation'
 
   export default defineComponent({
     setup() {
       const page = ref('Login')
       const inputItem = reactive({
-        username: '',
-        password: '',
+        value: {
+          username: '',
+          password: '',
+        },
+        error: {
+          username: '',
+          password: '',
+        },
       })
       const userState = useRootStore()
       const clearInput = () => {
-        inputItem.username = ''
-        inputItem.password = ''
+        inputItem.value.username = ''
+        inputItem.value.password = ''
       }
+
+      function valid() {
+        inputItem.error.password = passwordPattern(inputItem.value.password)
+        return inputItem.error.password.length
+      }
+
       function login() {
+        if (!valid()) return
         try {
-          userState.login(inputItem)
+          userState.login(inputItem.value)
           clearInput()
           router.push('/')
         } catch (error) {

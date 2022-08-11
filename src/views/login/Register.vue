@@ -86,7 +86,6 @@
       }
 
       const clearError = () => {
-        console.log(`Clear error logged`)
         inputItem.errors.username = ''
         inputItem.errors.email = ''
         inputItem.errors.password = ''
@@ -124,14 +123,17 @@
 
       function register() {
         if (validate()) {
-          user.addUser({
-            username: inputItem.value.username,
-            email: inputItem.value.email,
-            password: inputItem.value.password,
-          })
-          console.log('Registered')
-          clearInput()
-          router.push('/login')
+          try {
+            user.addUser({
+              username: inputItem.value.username,
+              email: inputItem.value.email,
+              password: inputItem.value.password,
+            })
+            clearInput()
+            router.push('/login')
+          } catch (error) {
+            console.log(error);
+          }
         }
       }
 
