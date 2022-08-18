@@ -32,6 +32,9 @@
           inputId="confirm-password"
         />
         <br />
+        <div v-if="errorFetch.length" class="mx-auto my-2">
+          <p class="text-red-400 text-center">{{ errorFetch }}</p>
+        </div>
         <button
           class="btn bg-cyan-500 shadow-lg shadow-cyan-500/50 text-white mx-auto p-2 rounded-lg w-full"
         >
@@ -76,6 +79,7 @@
           confirmpassword: '',
         },
       })
+      const errorFetch = ref('')
       const user = useRootStore()
 
       const clearInput = () => {
@@ -93,6 +97,7 @@
       }
 
       function validate() {
+        errorFetch.value = ''
         clearError()
         let valid = true
 
@@ -121,23 +126,30 @@
         return valid
       }
 
-      function register() {
+      async function register() {
         if (validate()) {
           try {
-            user.addUser({
+            await user.register({
               username: inputItem.value.username,
               email: inputItem.value.email,
               password: inputItem.value.password,
             })
             clearInput()
-            router.push('/login')
+            router.push('/')
           } catch (error) {
-            console.log(error);
+            if (error instanceof Error) {
+              if (error.message.includes('username')) {
+                const errors = JSON.parse(error.message)
+                inputItem.errors = { ...inputItem.errors, ...errors }
+              } else {
+                errorFetch.value = error.message
+              }
+            }
           }
         }
       }
 
-      return { page, register, inputItem }
+      return { page, register, inputItem, errorFetch }
     },
     components: { Password, TextInput },
   })

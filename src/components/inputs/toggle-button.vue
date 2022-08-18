@@ -1,8 +1,8 @@
 <template>
   <div class="flex items-center space-x-4" @click="toggle">
     <div
-      class="w-14 h-8 flex items-center bg-gray-300 rounded-full p-1 duration-300 ease-in-out"
-      :class="{ 'bg-green-400': value }"
+      class="w-14 h-8 flex items-center rounded-full p-1 duration-300 ease-in-out"
+      :class="{ 'bg-green-400': value, 'bg-red-400': !value }"
     >
       <div
         class="bg-white w-6 h-6 rounded-full shadow-md transform duration-300 ease-in-out"

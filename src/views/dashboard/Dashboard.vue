@@ -7,9 +7,9 @@
       </h1>
       <form class="w-1/2 mx-auto space-y-3" @submit.prevent="pushStatement">
         <ToggleButton
-          label="Income/Expenses"
+          :label="incExp"
           :value="statement.income"
-          @onUpdateValue="statement.income = !statement.income"
+          @onUpdateValue="changeEntryLabel"
         />
         <TextInput
           label="Remarks"
@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts">
-  import { reactive } from '@vue/reactivity'
+  import { reactive, ref } from '@vue/reactivity'
   import { computed, defineComponent, onMounted } from '@vue/runtime-core'
   import router from '@/router'
   import { useRootStore } from '@/store'
@@ -51,6 +51,7 @@
         income: false,
       })
       const userState = useRootStore()
+      const incExp = ref('Expenses')
 
       const self = computed(() => userState.getUser)
 
@@ -59,8 +60,8 @@
       }
 
       onMounted(() => {
-        const user = JSON.parse(localStorage.getItem('loggedIn')!)
-        userState.fetchUser(user.id)
+        const user = localStorage.getItem('loggedIn')
+        if (user) userState.fetchUser(user)
       })
 
       function clearInput() {
@@ -73,7 +74,12 @@
         console.log(statement.remark, statement.amount)
         clearInput()
       }
-      return { statement, goTo, self, pushStatement }
+
+      function changeEntryLabel() {
+        statement.income = !statement.income
+        incExp.value = statement.income ? 'Income' : 'Expenses'
+      }
+      return { statement, goTo, self, pushStatement, incExp, changeEntryLabel }
     },
   })
 </script>

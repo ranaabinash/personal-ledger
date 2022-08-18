@@ -13,7 +13,7 @@
     :placeholder="placeholder"
   />
   <div>
-    <p class="text-red-500">{{ error }}</p>
+    <p class="text-red-500 text-xs">{{ error }}</p>
   </div>
 </template>
 

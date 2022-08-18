@@ -66,17 +66,24 @@
 
       function valid() {
         inputItem.error.password = passwordPattern(inputItem.value.password)
-        return inputItem.error.password.length
+        return !inputItem.error.password.length ? true : false
       }
 
-      function login() {
+      async function login() {
         if (!valid()) return
         try {
-          userState.login(inputItem.value)
+          await userState.login(inputItem.value)
           clearInput()
           router.push('/')
         } catch (error) {
-          if (error instanceof Error) console.log(error.message)
+          if (error instanceof Error) {
+            if (error.message.includes('username')) {
+              const errors = JSON.parse(error.message)
+              inputItem.error = { ...inputItem.error, ...errors }
+            } else {
+              console.log(error.message)
+            }
+          }
         }
       }
 

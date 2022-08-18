@@ -60,7 +60,7 @@
     </div>
   </div>
   <div>
-    <p class="text-red-500">
+    <p class="text-red-500 text-xs">
       {{ error }}
     </p>
   </div>

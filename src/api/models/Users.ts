@@ -1,12 +1,16 @@
 export interface User {
   _id: string
   username: string
-  email?: string,
+  email: string,
+}
+
+export interface LoginCredentials {
+  username: string
   password: string
 }
 
-export interface SetUser {
+export interface RegisterCredentials {
   username: string
-  email?: string
+  email: string
   password: string
 }
