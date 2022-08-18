@@ -5,7 +5,7 @@ const apiURI = import.meta.env.VITE_API_URL
 export class authServices {
   public static async login(
     user: LoginCredentials
-  ): Promise<{ user: string } | undefined> {
+  ): Promise<{ user: string, token: string } | undefined> {
     const payload = JSON.stringify(user)
     try {
       const res = await fetch(`${apiURI}login`, {
@@ -27,7 +27,7 @@ export class authServices {
 
   public static async registerUser(
     user: RegisterCredentials
-  ): Promise<{ user: string } | undefined> {
+  ): Promise<{ user: string, token: string } | undefined> {
     const payload = JSON.stringify(user)
     try {
       const res = await fetch(`${apiURI}signup`, {

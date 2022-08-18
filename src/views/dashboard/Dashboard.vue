@@ -60,8 +60,7 @@
       }
 
       onMounted(() => {
-        const user = localStorage.getItem('loggedIn')
-        if (user) userState.fetchUser(user)
+        userState.fetchUser()
       })
 
       function clearInput() {

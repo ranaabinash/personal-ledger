@@ -15,7 +15,7 @@ export interface IGetters extends _GettersTree<IRootState> {
   getUser: (state: IRootState) => User
 }
 export interface IActions extends _ActionsTree {
-  fetchUser(id: string): void
+  fetchUser(): void
   register(user: RegisterCredentials): void
   login(user: LoginCredentials): void
   logout(id: string): void
@@ -27,10 +27,11 @@ export const useRootStore = defineStore('rootStore', {
     getUser: (state) => state.user,
   } as IGetters,
   actions: {
-    async fetchUser(id: string) {
+    async fetchUser() {
       if (state.user) return
       try {
-        const res = await UserServices.getUser(id)
+        const { user, token } = JSON.parse(localStorage.getItem('loggedIn')!)
+        const res = await UserServices.getUser(user, token)
         this.$patch((state: IRootState) => {
           state.user = res
         })
@@ -49,7 +50,10 @@ export const useRootStore = defineStore('rootStore', {
               email: user.email,
             }
           })
-          localStorage.setItem('loggedIn', res.user)
+          localStorage.setItem(
+            'loggedIn',
+            JSON.stringify({ token: res.token, user: res.user })
+          )
         }
       } catch (error) {
         if (error instanceof Error) throw Error(error.message)
@@ -58,7 +62,11 @@ export const useRootStore = defineStore('rootStore', {
     async login(userparam) {
       try {
         const res = await authServices.login(userparam)
-        if (res) localStorage.setItem('loggedIn', res.user)
+        if (res)
+          localStorage.setItem(
+            'loggedIn',
+            JSON.stringify({ token: res.token, user: res.user })
+          )
       } catch (error) {
         if (error instanceof Error) throw Error(error.message)
       }
